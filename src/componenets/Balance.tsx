@@ -1,10 +1,8 @@
 "use client";
 import { useState } from "react";
-import { useConnection } from "@solana/wallet-adapter-react";
 import { Connection } from "@solana/web3.js";
 
 export default function Balance() {
-    const { connection } = useConnection();
     const [address, setAddress] = useState("");
     const [balance, setBalance] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
@@ -20,13 +18,14 @@ export default function Balance() {
             if (!pubkey) throw new Error("Please enter a public address.");
             // Select endpoint based on network
             const endpoint = network === "mainnet"
-                ? "https://solana-devnet.g.alchemy.com/v2/4qaVLMXJXoxalSmOND5pN35e2Vh9B_uL"
+                ? "https://solana-mainnet.g.alchemy.com/v2/4qaVLMXJXoxalSmOND5pN35e2Vh9B_uL"
                 : "https://solana-devnet.g.alchemy.com/v2/4qaVLMXJXoxalSmOND5pN35e2Vh9B_uL";
             const tempConnection = new Connection(endpoint);
-            const lamports = await tempConnection.getBalance({ toBase58: () => pubkey } as any);
+            const lamports = await tempConnection.getBalance({ toBase58: () => pubkey } as unknown as import("@solana/web3.js").PublicKey);
             setBalance((lamports / 1e9).toLocaleString() + " SOL");
-        } catch (err: any) {
-            setError(err.message || "Invalid address or network error.");
+        } catch (err) {
+            const error = err as Error;
+            setError(error.message || "Invalid address or network error.");
         } finally {
             setLoading(false);
         }
