@@ -73,7 +73,7 @@ export default function Header() {
         </div>
         <div
           className="hover:text-purple-500 cursor-pointer"
-          onClick={() => router.push("/check-balance")}
+          onClick={() => router.push("/balance")}
         >
           Balance
         </div>
