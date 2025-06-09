@@ -41,7 +41,7 @@ export default function TokenLaunchpad() {
   const { connection } = useConnection();
 
   useEffect(() => {
-    const { name, symbol, logo, supply } = tokenDetails;
+    const { name, symbol, supply } = tokenDetails; // removed logo from destructure
     if (!wallet.connected || !name || !symbol || !supply) {
       setDisableField(true);
     } else {
@@ -116,9 +116,10 @@ export default function TokenLaunchpad() {
       setStatus(
         `✅ Token Minted!\nMint Address: ${mintKeypair.publicKey.toBase58()}\nTx: ${txId}`
       );
-    } catch (err: any) {
-      console.error(err);
-      setStatus(`❌ Error: ${err.message}`);
+    } catch (err) {
+      const error = err as Error;
+      console.error(error);
+      setStatus(`❌ Error: ${error.message}`);
     }
   };
 
